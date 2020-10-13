@@ -1,0 +1,21 @@
+#Raster Mosiac and Masking Script 
+#Improt Dependencies
+library(raster)
+# import rasters you want to mosiac (replace the path to your chosen raster)
+ras1<-raster("/Users/Ahmad/Desktop/Lebanon_Elevation_rasters/N33E036.hgt")
+ras2<-raster("/Users/Ahmad/Desktop/Lebanon_Elevation_rasters/N33E035.hgt")
+ras3<-raster("/Users/Ahmad/Desktop/Lebanon_Elevation_rasters/N34E035.hgt")
+ras4<-raster("/Users/Ahmad/Desktop/Lebanon_Elevation_rasters/N34E036.hgt")
+#Mosaic the tiles and plot to check that it worked
+ras<-mosaic(ras1, ras2,ras3,ras4, fun=mean, tolerance=0.05, filename="LEB_elev")
+plot(ras)
+
+#For masking you will need a vector file otherwise you will need to crop by a fixed etent
+# e is the extent
+e<-extent(beyshape)
+#the mask functions argments are as follows
+raster_masked<-mask(crop(ras,e),beyshape)
+plot(raster_masked)
+#To export: make sure you choose the path where you want to write the file
+writeRaster(raster_masked, filename = "/Users/Ahmad/Desktop/Lebanon_clipped_elev.tif")
+
